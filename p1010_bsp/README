@@ -1,0 +1,125 @@
+
+                 README: Freescale MPC8548 CDS (cds8548)
+
+This file contains board-specific information for the Freescale MPC8548
+CDS target board.  Specifically, this file contains information on any BSP
+interface changes from previous software or hardware versions, and
+contains caveats that the user must be aware of before using this BSP.
+
+------------------------------------------------------------------------------
+RELEASE 2.0/4
+
+        Released from Wind River for VxWorks 6.6 
+
+        Additional VXBUS support (interrupt controller, PCI, serial).  VXBUS now
+        required.
+        Correct DUART2 interrupt number.(WIND00095933)
+        Correct AUX_CLK_RATE macros to pass auxclk test.(WIND00063974)
+
+RELEASE 2.0/3
+
+        Updates to the NOR release. New IP stack.
+
+RELEASE 2.0/2
+
+        Support PCI Express for CDS_SYSTEM2 which includes rev2.0 silicon or
+        later.
+        CDS_SYSTEM2 defined which means this BSP now supports rev2 silicon. See 
+        target.ref for details of CDS_SYSTEM2 vs CDS_SYSTEM1.
+        You ideally should use CDS_SYSTEM2 if you want SRIO or PCI-Express.
+        All four ETSEC devices are supported on the rev1.3 carrier card
+        (CDS_SYSTEM2).
+        This BSP release may supercede that of the BSP released for vxWorks 6.4 
+        which will not support CDS_SYSTEM2.
+
+        IMPORTANT - MUST READ
+
+        There are a few files that are patched with the BSP install, they are 
+        required for this BSP. This means you must recompile target/src/hwif 
+        using make CPU=PPC32 TOOL=sfdiab as well as target/src/drv/end. The 
+        shared memory driver and gei driver are needed to be updated for PCI
+        Express 82573 NIC and the SRIO support. Alternatively you can copy them
+        into the BSP and compile and link there by adding the object names to 
+        MACH_EXTRA in the Makefile. Serial RapidIO,the ETSEC and the Marvell Phy
+        are patched in target/src/hwif.
+
+RELEASE 2.0/1
+
+        SRIO support is now available for point to point with two CDS8548 
+        systems. 
+        ETSEC functionality has been added including checksum offload support 
+        and filer capability.
+        VXBUS infrastructure is now used for ETSEC and SRIO. These devices are 
+        configured via hwconf.c including the MII bus and PHY driver.
+        There is backward compatibility with the END TSEC driver and can be 
+        configured if necessary but not for SRIO which requires vxBus to be 
+        included.
+
+RELEASE 2.0/0
+
+        SRIO not supported for this first release, waiting until silicon works
+        with a JTAG workaround during reset. 
+        ETSEC - enhanced features such as checksum offload not supported in this
+        release but is planned. Only standard TSEC features supported for now.
+        PCI is supported but will need the JTAG workaround for early revisiions
+        of the silicon to enable a functional interface. WindRiver ICE and Probe 
+        have this workaround available for the silicon. Only slot 4 is supported
+        on the Arcadia X3 backplane and a 64-bit GEI NIC was used to test.
+        PCI Express not supported yet. Note: legacy interrupts not available 
+        from standard board - a newer Rev of the CPU card and carrier card needs
+        to be done to support this. MSI unsupported.
+
+        Continued sensitivity of the CDS8548 to vibration with JTAG connected 
+        has been observed.
+
+        Supported CDS8548 system is the following:
+        Arcadia X3 motherboard
+        CDS Carrier rev 1.2
+        CDS CPU Card rev 2.0
+
+        This BSP will move to the VXBUS infrastructure for some drivers for 
+        vxWorks 6.3 which includes the serial RapidIO and ETSEC. There are 
+        already changes in the BSP to support this which may not make alot of 
+        sense at this time. This means anyone wanting the additional 
+        functionality should expect to migrate to vxWorks 6.3.
+
+        L2 cache library will require modification to support rev2 silicon. 
+        Expect this to be done whenever Rev 2.0 silicon is made available for 
+        testing. This will affect L2 SRAM and sysL2ExternalWriteBuffer used by
+        TSEC.
+
+        ETSEC in halfduplex mode doesn't work. The reason is two errata in 
+        pre-rev2.0 silcon. One which affects the default HAFDUP settings used 
+        which is fixed ETSEC driver not the TSEC End driver. The second results
+        in a TX stall and requires re-tranmission of the packet otherwise the 
+        driver no longer will transmit. The workaround is intrusive and leaves
+        to a non-deterministic data rate, this should be fixed in rev2 silicon 
+        until then we do not support halfduplex mode.
+ 
+        EAR Version 2.0/0
+
+        Issues:
+
+        Only Rev1.1 silicon supported
+        PCI tested on old arcadia board but was unreliable. 
+        Expect to work on latest X3 version but untested.
+
+        SRIO has been tested:
+        Requires GEN6 pll workaround via JTAG. TIPC_SM/SM END is working.
+        Require addition of smUtilLib.o to MACH_EXTRA - should be temporary.
+
+        PCI-Express:
+        Configuration cycles working but no device tested yet. Devices will be
+        on bus==1 not bus==0 which only has controller.
+
+        PCI2 not available
+
+        JTAG connection seems to be delicate try to keep target isolated and 
+        away from interference.
+
+        Partially tested security engine drivers for SEC2.0 may still be issues.
+        Additional features SEC2.1 not supported in present drivers.
+
+        Only support 1GHz Core 400Mhz DDR to reduce configuration/initialization
+        issues.
+

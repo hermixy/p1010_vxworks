@@ -1,0 +1,661 @@
+\" cds8548/target.ref - Freescale MPC8548 CDS target specific documentation
+\"
+\" Copyright (c) 2005-2007 Wind River Systems, Inc.
+\"
+\" modification history
+\" --------------------
+\" 01d,02may07,pmr  VxBus additions.
+\" 01c,31oct06,pmr  Elaborated on usage of CDS_SYSTEM2.
+\" 01b,06sep06,dtr  Modified to add info for rev2 silicon and new cds system.
+\" 01a,12jul05,dtr  Created from cds85xx/01c
+\"
+\"
+\TITLE cds8548 - Freescale MPC8548 CDS
+
+NAME
+`Freescale MPC8548 CDS'
+
+INTRODUCTION
+
+This reference entry provides board-specific information necessary to run
+VxWorks for the cds8548 BSP.  Please read the section "RUNNING VXWORKS" 
+in order to configure the board to run vxWorks.
+The CDS8548 system consists of three specific pieces of hardware:
+Motherboard - Arcadia X3 is supported.
+Carrier card - Rev. 1.2 is supported.
+CPU Card - Rev. 2.0 is supported.
+Additional support for another system has been added, this BSP is calling it 
+CDS_SYSTEM2 and incorporates:
+Motherboard - Arcadia X3.1 is supported.
+Carrier card - Rev. 1.3 is supported.
+CPU Card - Rev. 2.2 is supported.
+
+IMPORTANT: CDS_SYSTEM2 is enabled by default.  This means that the BSP is 
+by default configured for the newer system specified above.  If the BSP is to
+be used with the older system, CDS_SYSTEM2 must be disabled.  This is
+accomplished by changing #define CDS_SYSTEM2 to #undef CDS_SYSTEM2 in config.h
+Conversely, if the BSP is to be used with the newer system, this macro must be
+left defined.  Improper configuration can result in failure to boot, scrambled
+serial output, and other undesirable behavior.
+
+An additional configuration has been tested with serial RIO.  The BSP calls
+it CDS_SYSTEM1_2, and it consists of a Rev 2.0 CPU card, Rev 1.2 Carrier card,
+and Arcadia X3.1 motherboard.  This configuration is only intended for cases
+where plugging an older 8548CDS board into a newer motherboard is necessary;
+testing beyond basic functionality and shared memory over serial RIO has
+not been performed.  To configure the BSP, #undef CDS_SYSTEM2 and #define
+CDS_SYSTEM1_2.  An additional switch setting change is also required.
+
+The configuration discussed in this file as CDS_SYSTEM1 is selected by #undef
+CDS_SYSTEM2 and #undef CDS_SYSTEM1_2.
+
+RUNNING VXWORKS
+This section provides guidelines for running VxWorks on the cds8548 
+reference board.
+
+\sh 1. Setting the board Jumpers and Switches
+
+Switch Settings for the three boards which constitute the CDS8548 system.
+
+Use the relevent CDS users manual for switch details.
+
+CDS_SYSTEM1 - Pre-rev2 silicon
+
+\ts
+Rev. 2.0 CPU card
+
+SW Bit-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | ON | ON | ON | ON | ON | ON | OFF | ON
+2 | OFF  | ON  | ON | ON  | ON | ON | OFF | OFF
+3 | ON | ON  | OFF | ON | ON | ON | OFF | OFF
+4 | ON | OFF | OFF | OFF | OFF | ON | ON | ON
+\te
+\ts 
+Rev. 1.2 Carrier Card 
+
+SW Pin-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | OFF | ON | ON | OFF | ON | ON | OFF | OFF
+2 | OFF  | ON  | ON | OFF | ON | ON | OFF | OFF
+3 | ON | ON | OFF | ON | OFF | ON | OFF | ON
+4 | ON | OFF | OFF | OFF | ON | OFF | OFF | OFF
+\te
+\ts
+Arcadia X3 motherboard
+
+SW Pin-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | OFF | OFF | OFF | OFF | OFF | ON | OFF | OFF
+2 | OFF  | ON  | ON | ON  | ON | ON | ON | ON
+3 | ON | ON | ON | ON | ON | ON | ON | ON
+\te
+
+CDS_SYSTEM2
+\ts
+Rev. 2.2 CPU card
+
+SW Bit-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | ON | ON | ON | ON | ON | ON | ON | ON
+2 | OFF  | ON  | ON | ON  | ON | ON | OFF | OFF
+3 | ON | ON  | OFF | ON | OFF | ON | ON | OFF
+4 | ON | OFF | OFF | ON | OFF | ON | ON | ON
+\te
+\ts 
+Rev. 1.3 Carrier Card 
+
+SW Pin-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | OFF | ON | ON | OFF | ON | ON | OFF | OFF
+2 | OFF  | ON  | ON | OFF | ON | ON | OFF | OFF
+3 | ON | ON | OFF | ON | OFF | ON | OFF | ON
+4 | ON | OFF | OFF | OFF | ON | OFF | OFF | OFF
+\te
+\ts
+Arcadia X3.1 motherboard
+
+SW Pin-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | OFF | OFF | OFF | OFF | OFF | ON | ON | OFF
+2 | OFF  | ON  | ON | ON  | ON | ON | ON | ON
+3 | ON | ON | OFF | OFF | ON | ON | ON | ON
+\te
+
+\sh SRIO config for Agent 
+
+The agent requires different settings on the CPU card.
+
+CDS_SYSTEM1
+\ts
+Rev. 2.0 CPU card
+
+SW Bit-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | ON | ON | ON | ON | ON | ON | OFF | ON
+2 | OFF  | ON  | ON | ON  | ON | ON | OFF | OFF
+3 | ON | ON  | OFF | ON | ON | ON | OFF | OFF
+4 | ON | OFF | OFF | OFF | OFF | OFF | OFF | ON
+\te
+
+CDS_SYSTEM1_2
+\ts
+Rev. 2.0 CPU card
+
+SW Bit-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | ON | ON | ON | ON | ON | ON | OFF | ON
+2 | OFF  | ON  | ON | ON  | ON | ON | OFF | OFF
+3 | ON | ON  | OFF | ON | OFF | ON | ON | OFF
+4 | ON | OFF | OFF | OFF | OFF | OFF | OFF | ON
+\te
+
+CDS_SYSTEM2
+\ts
+Rev. 2.2 CPU card
+
+SW Bit-> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+-
+1 | ON | ON | ON | ON | ON | ON | ON | ON
+2 | OFF  | ON  | ON | ON  | ON | ON | OFF | OFF
+3 | ON | ON  | OFF | ON | OFF | ON | ON | OFF
+4 | ON | OFF | OFF | ON | OFF | OFF | OFF | ON
+\te
+
+\sh 2. Flashing the Boot ROM Image Using Workbench
+
+   This section describes how to program a VxWorks bootrom image onto 
+   a flash bank using Workbench 2.4 (or later) and the Wind River ICE 
+   plugin. Note that the Wind River Probe (USB) is also supported and 
+   uses the same basic instructions as the Wind River ICE but does not 
+   require an IP address.
+
+   If you want to preserve the UBOOT image, switch the flash bank that 
+   will be used for the bootrom image using SW2 pin 2 on the carrier card. 
+   This switches bank 1 and bank 0 of the flash bank and should prevent 
+   UBOOT from being overwritten. Note that UBOOT can be used to program 
+   a VxWorks bootrom image but the process is not covered here.
+   
+
+   Using Workbench, complete the following steps to flash your boot ROM image:
+          
+	a) Create a bootrom.hex image.
+
+	Create a VxWorks boot loader project based on the cds8548 BSP.
+	You can use the default compressed image. However, use hex 
+	format in place of the elf format.
+	After the project is created, build the default image.
+ 
+	b) Install the WindRiver ICE and power it on.
+
+	Connect the JTAG interface cable from the Wind River ICE to the 
+	CDS8548 board JTAG connector (located on the CPU card). When all 
+	of the connections have been made, power up the CDS8548 board and 
+	create a Wind River ICE connection in Workbench.
+
+	c) Configure the Workbench connection.
+
+	When creating the connection, specify the MPC8548 CPU.
+	Enter the IP address of the Wind River ICE when requested.
+
+	d) Load the proper cds8548 register setting for WindRiver ICE.
+
+	Once you have connected the probe to the CPU, right-click on the 
+	connection in the target manager and attach to the CPU core. At 
+	this point, you can go to the main Workbench Window tab at the top 
+	of the view and select "show view". Browse the view list and select 
+	OCD Command Shell. This launches the original BKM command shell.
+	Navigate to the target manager and right-click on core(U1). Select 
+	reset and download. You can now put the register file in this BSP or 
+	one provided by the installation in "play register file" 
+	(for example, cds8548.vsh). Reset with IN then click the reset 
+	download button. You have now loaded the target board with enough 
+	settings to program the boot ROM. Select "Window > show view" again 
+	and select Flash Programmer.
+	
+	e) Converting the bootrom.hex file to bootrom.bin.
+
+	Select the Add/Remove tab in the flash programmer. Click 
+	"convert file" and navigate to the boot loader project you created 
+	previously e.g. WindRiver\workspace\cds8548BootProj\bootrom.hex. 
+	Select the project. The start adress should be 0x0 and the end 
+	adress should be set to 0xfffffff. Click "convert and add" to convert 
+	the file. 
+ 	At this point, the file is added to the list. Click on the start 
+	address entry (should be 0x0) and change it to 0xfff00000. The file 
+	is now ready for programming.
+
+
+	f) Program the cds8548 flash.
+
+	Select the configuration tab and choose the following device:
+	AMD -> 29LV64xDx -> 4096 x 16 -> 1 Device.
+
+	Set the base address to 0xff800000.
+	Set the start address to 0x2000. 
+	Set the size to 20000.
+
+	Select programming tab and set the following options:
+
+	Set the erase from setting to 0xfff00000.
+	Set the erase to setting to 0xffffffff.
+
+	Go to OCD command shell and type IN. Be sure this returns the BKM 
+	prompt and is OK. Return to the flash programmer and select the 
+        Batch Program tab and then select the Initialize/Erase and Program 
+	checkboxes. Click Execute.
+	Wait for the programmer to complete.
+	You can now run the VxWorks boot ROM by going back to the OCD command 
+	shell and typing "INN" followed by "GO". Alternatively, you can 
+	disconnect the ICE and proceed to Step 3 "Running the VxWorks Boot 
+	ROM Program".
+        
+\sh 3. Running the VxWorks Boot ROM Program
+
+	To run the VxWorks boot ROM program, complete the following steps:
+
+	a) If you have not already done so, disconnect the Wind River ICE.
+	Note that if the ICE remains connected, it can stop the processor at 
+	the first instruction in certain cases.
+
+	b) Connect the Ethernet and serial channels.
+	
+	i) Connect the serial port in the carrier card to the host 
+	using the supplied serial cable.
+	ii) Connect the RJ45 Ethernet cables to the TSEC ports which 
+	are adjacent to the serial port in the carrier card. The connector 
+	furthest from the serial port is TSEC1.
+
+	c) Launch a terminal program on the host and configure as follows:
+
+	8 data bits
+	1 stop bit
+	no hardware handshaking 
+	parity disabled
+	baud rate = 9600 bps
+
+	d) Power cycle the board.
+
+	If the board is not already powered off, turn it off momentarily. 
+	Then, power the board on. At this point, you should see characters 
+	being printed to the terminal window signaling the boot countdown. 
+	Press any key to stop the count down. You are now ready to configure 
+	VxWorks. For detailed instructions, see the VxWorks Kernel 
+	Programmer's Guide.
+
+\sh BOOT DEVICES
+The supported boot devices are:
+\cs
+	motetsec - 10/100/1000 Triple Speed Ethernet Controller
+	tffs - flash. (Optional, you need to reconfigure the BSP to 
+	include TrueFFS)
+\ce
+
+FEATURES
+This section describes the supported and unsupported features of the cds8548
+
+\sh Supported Features
+
+The supported features of the CDS8548 board are:
+
+	MMU support, including 36-bit physical addressing (see the Makefile)
+	Cache support
+	L2 cache support (pre-revsion 2 only)
+	L2 SRAM support (pre-revsion 2 only)
+	Decrementer timer, used to implement a system clock
+	Timestamp clock
+	Auxilliary clock
+	MPC8548 DUART
+	on-chip 10/100/1000 ETSEC 1,2,3,4(CDS_SYSTEM2 reqd for 3 & 4)
+	on-chip programmable interrupt controller
+	DDR SDRAM (up to 512 MB memory)
+	Local bus SDRAM (up to 64 MB memory)
+	Flash (about 16 MB)
+	Local bus NVRAM (about 8 KB)
+	Boot parameters on the NVRAM
+	Security Engine - partial support only, SEC 2.0 features verified. 
+			- See Wind River/Freescale support for latest drivers
+	I2C controller - partial support only, single thread access
+	PCI 1 host controller
+	Intel 8254x 10/100/1000 gigabit controller
+    	Serial RapidIO - only point to point with another CDS8548.
+	PCI Express - auto config not supported but an intel gei card tested 
+        in the PCI Express slot manually configured in the BSP gei 
+        configlette (CDS_SYSTEM2 reqd).
+
+\sh Unsupported Features
+
+The following devices are unsupported by this BSP:
+
+	PCI 2 host controller.
+	DMA controller.
+
+HARDWARE DETAILS
+This section documents the details of the device drivers and board
+hardware elements.
+
+\sh Devices
+
+The chip drivers included are:
+
+	am29lv64xdMtd.c - Flash memory MTD driver for TrueFFS.
+	m85xxTimer.c - Timer driver.
+	m85xxPci.c - On-chip PCI Bridge library/interrupt handler (VxBus). 
+	vxbEpicIntCtlr.c - On-chip interrupt controller (VxBus).
+	etsec.c - ETSEC ethernet controller (VxBus).
+	ns16550sio.c - Serial driver (VxBus).
+	miiBus.c - Media Independent Interface library (VxBus).
+	mem/byteNvRam.c - Nvram driver.
+	gei825xxVxbEnd.c - Intel 8254x Gigabit controller (VxBus).
+	sysL2Cache.c - L2 cache library.
+	m85xxPci.c - PCI initialization library (VxBus).
+	m85xxRio.c - RapiIo bus controller driver for 8548 (VxBus).
+ 
+\sh Memory Maps
+
+The following table describes the CDS8548 default memory map:
+\ts
+
+Start | Size | End | Access to
+------------------------------
+0x0000_0000 | 512 MB | 0x1FFF_FFFF | DDR SDRAM
+0x5000_0000 | 64 MB | 0x53FF_FFFF | PCI 1 Prefetchable Memory
+0x5400_0000 | 64 MB | 0x57FF_FFFF | PCI 1 Non-Prefetchable Memory
+0x5800_0000 | 64 MB | 0x5BFF_FFFF | PCI 1 I/O 
+0x6000_0000 | 64 MB | 0x63FF_FFFF | PEX Prefetchable Memory
+0x6400_0000 | 64 MB | 0x67FF_FFFF | PEX Non-Prefetchable Memory
+0x6800_0000 | 64 MB | 0x6BFF_FFFF | PEX I/O
+0xC000_0000 | 256 MB | 0xCFFF_FFFF | Serial RapidIO 
+0xF700_0000 | 16 MB | 0xF7FF_FFFF | NVRAM/CADMUS
+0xF800_0000 | 64 MB | 0xFBFF_FFFF | LBC SDRAM
+0xE000_0000 | 1 MB | 0xFE0F_FFFF | Configuration Control Registers
+0xFF00_0000 | 8 MB | 0xFF7F_FFFF | Flash 2
+0xFF80_0000 | 8 MB | 0xFFFF_FFFF | Flash 1
+\te
+
+The following table describes the default VxWorks macros that are used 
+to address memory
+\ts
+
+Macro Name | Macro Definition | Description
+------------------------------
+LOCAL_MEM_LOCAL_ADRS | 0x0000_0000 | base of RAM
+RAM_LOW_ADRST | LOCAL_MEM_LOCAL_ADRS + 0x0001_0000 | VxWorks image point and stack grows down from this address.
+RAM_HIGH_ADRS | LOCAL_MEM_LOCAL_ADRS + 0x00d0_0000 | VxWorks boot ROM loaded here.
+LOCAL_MEM_SIZE | 1000_0000 | default 256 MB of RAM
+ROM_BASE_ADRS | 0xFFF0_0000 | base address of ROM
+ROM_TEXT_ADRS | ROM_BASE_ADRS + 0x100 | text must start after vector table 
+ROM_WARM_ADRS | ROM_TEXT_ADRS + 8 | warm Reboot Entry Address
+ROM_SIZE | 0x0010_0000 | default 1 MB of ROM
+\te
+
+\sh Support for L2 Cache
+L2 Cache is configured with callback function pointers for L2 Cache Global 
+Invalidation, L2 Cache Enable, L2 Cache Flush, and L2 Cache Disable. These 
+function pointers are initialized in sysHwInit( ). By default, the 512 KB 
+L2 is configured to 512 KB of cache. If a different configuration is desired, 
+a new boot ROM image should be used to match the RAM image configuration of 
+the L2.
+
+\sh Support for Serial RapidIO via VXBUS
+Only support a point-to-point connection between two cds8548 targets is 
+supported.  The memory allocation is based on requirements for shared memory
+interface and is fixed initially to use memory traditionally set aside for that.
+The targetID and window allocation is determined via the hwconf.c file.
+Also the Local Access Windows are allocated based on this file so if an 
+unused LAWBAR isn't available or allowed for SRIO then configuration will 
+fail.
+The hardware setup is accomplished by connecting a serial RIO cable between the
+host and agent targets at their RIO connectors located beneath the PCI slot.
+Only a configuration where the host and agent targets reside on the same
+motherboard has been tested.
+Serial RapidIO is configured by #defining INCLUDE_RAPIDIO_BUS in config.h. 
+Shared Memory END (SMEND) and TIPC are supported over RapidIO.  To configure 
+SMEND, a bootrom for the agent board must be built which includes RapidIO
+support.  The host board must be configured with a valid IP address for the
+shared memory backplane, and IP forwarding must be enabled.  The agent board
+uses the SMEND interface (sm0) to download its VxWorks image.  Sequential
+addressing is used by default to determine the backplane IP address for the
+agent board.  The file server or host from which the VxWorks images are
+downloaded may need to be configured to route traffic to the agent board via
+the host board.  In other words, the host board's ethernet IP address should
+be treated as the gateway to the backplane IP net.
+
+\sh Special notes for Serial RapidIO with pre-rev2.0 silicon
+NOTE: The following is not required for rev2.0 silicon.
+Serial RapidIO, although supported on pre-rev2.0 silicon, requires non-standard
+initialization due to silicon errata.  Both target boards need to be reset 
+via a hardware JTAG debugger with the correct firmware.  The host needs to be
+reset at the same time as the agent via JTAG.  If configuration of Serial
+RapidIO fails makes sure that the link was actually established in hardware.
+That can be verified by dumping the register at 0xff7c0158.  The value 
+should be 0x2.  If not, the host and agent boards should be reset until this
+register contains the correct value.
+
+\sh ETSEC via VXBUS
+The Etsec is configured with checksum offload capability by default. 
+The Filer isn't enabled by default but there is an Ioctl available for that.
+Look at the example table in the driver before trying to configure the filer 
+through the IOCTL. Support for queue prioritization is provided by the driver
+not the network stack so it pulls the packets off from the highest priority 
+queue first which is queue 0 and sends them to the stack. Once it is empty it 
+will go to the next queue and so on.
+VLAN tag insertion/removal support is not fully tested with the stack.
+
+\sh Operating Speed
+The processor has built-in PLL circuits to control the operating speed of 
+the Core Complex Bus (CCB) as well as the E500v2 core. The BSP supports a 
+400 MHz operating speed for CCB. The clock rate for the supported E500v2 
+core is 1 GHz for the MPC8548. For additional details, see the SW3 switch 
+details in the Freescale CDS8548 documetation for Rev. 2.0 CPU card.
+
+\sh Boot Process
+
+Upon reset, the MPC85xx begins executing from 0xFFFF_FFFC. Only the last 
+4 KB of memory is mapped by the TLB. The instruction at 0xFFFF_FFFC branches 
+to resetEntry( ) (which is located at the last 2 KB of memory) to begin 
+initialization and mapping of memory static TLB entries. The DDR SDRAM is 
+then mapped to 0x0 where the vectors are set up for use and execution is 
+then transferred to RAM after copying and uncompressing (if necessary). 
+
+The boot ROM for the CDS8548 allows you to load VxWorks with two TSEC 
+Ethernet channels. In the boot dialog, these channels correspond to the 
+"motetsec0" and the "motetsec1" devices. To switch between the boot devices 
+after a load is attempted, a hard reset or power cycle is necessary in order 
+for the device to function properly. After the reset, press a key to stop 
+the count down and use the "c" command to change the boot device to the 
+desired network device. 
+
+The CDS8548 boot ROM also supports loading VxWorks using the Intel 8254x 
+gigabit Ethernet controller. An Intel 82546/82545/82544/82543/82540-based NIC 
+can be plugged into an empty PCI slot. The config.h must be modified to define
+INCLUDED_PCI and INCLUDED_GEI8254X_END. If the 8254x NIC is plugged into the 
+PCI slot on the CPU card, the INCLUDE_CDS85XX_SECONDARY_PCI must also be 
+defined. Then, you will need to rebuild the boot ROM with the above changes 
+in config.h. At this point, you can re-flash the boot ROM to flash memory. The
+boot device for Intel 8254X gigabit controllers is "gei". 
+
+The CDS8548 boot ROM can also load the VxWorks image located in flash using 
+TrueFFS. To include TrueFFS, define the INCLUDE_TFFS macro in config.h. By default, 
+the flash address FF800000 - FFEFFFFF (7 MB) is configured to the primary 
+TrueFFS. To configure the flash FF000000 - FF6FFFFFF (7 MB) as the secondary 
+TrueFFS, INCLUDE_CDS85XX_SECOND_TFFS_FLASH amust also be defined. Rebuild and 
+re-flash the new boot ROM with TrueFFS. The boot device is "tffs=0,0" for the 
+primary flash, and "tffs=1,0" for the secondary flash. The VxWorks images 
+must be copied into TrueFFS before booting.
+
+\sh DDR RAM Size
+This BSP can support up to 512 MB DDR memory. By default, only 256 MB DDR 
+memory is configured in config.h. Change the definition of LOCAL_MEM_SIZE 
+in romInit.s for your desired DDR memory size and chip selects. Auto-detect 
+has not been implemented.
+
+\sh Local Bus SDRAM Size
+The initial boards are supplied with, and the BSP supports, a 64 MB SDRAM.
+
+\sh  NVRAM Support 
+This BSP is configured to use NVRAM on the 8 KB Maxim DS1533WP RTC/NVRAM 
+device. The bootline is stored at the beginning of NVRAM. The last 16 bytes 
+are for the RTC device. The actual NVRAM size is (8 * 1024 - 16) = 8176 bytes.
+
+\sh Network Configuration
+The TSEC port allows a 10/100/1000T connection. 
+The driver will auto-negotiate and configure the port accordingly. 
+The BSP also supports Intel 82546/82545/82544/82540/82543-based NICs with the
+PCI1 interface. 82573 with the PCI Express interface.
+
+\sh ROM Considerations
+The bootrom.hex file is provided with this BSP prebuilt. The boot ROM is 
+configured to a ROM base address of 0x0. When programming the boot ROM to 
+the flash, an offset of 0xFFF00000 need to be give.
+
+\sh Boot Flash
+There are two flash banks on the CDS8548 board.
+
+\sh PCI Support
+
+There are two PCI host controllers on the MPC8548, both are compliant to 
+PCI 2.2. In the CDS8548 reference board, the primary PCI (PCI1) interface is 
+through the Carrier edge fingers and the secondary PCI (PCI2) interface is not available.
+
+By default, the cds8548 BSP uses the PCI auto-configuration library to 
+configure only the PCI devices on the PCI bus 0 for PCI. Any PCI device 
+plugged into the PCI slot on the Arcadia board (base board) is in bus 0 of 
+the primary PCI (PCI1). Other devices on the Arcadia board, such as 
+floppy/hard disk controllers, keyboard/mouse controllers, and so forth are on 
+PCI bus 0 and are not supported.
+
+The Intel 8254x Gigabit Ethernet controllers are the only PCI devices 
+supported in this release. Define INCLUDE_GEI8254X_END in config.h to enable 
+this device, and define INCLUDE_SECONDARY_GEI_END if you have two 
+Intel 8254x devices on the PCI interfaces.
+
+If you require 32-bit instead of 64-bit PCI then you will need to toggle SW1 
+pin7 on the CPU Card as it defaults to 64-bit PCI.
+Only slot 4 has been tested as other 64-bit slots are blocked. The 32-bit 
+slots require special configuration which is at present unsupported.
+
+\sh TrueFFS
+TrueFFS is an optional product to use a flash device as a file system.
+To use TrueFFS, define INCLUDE_TFFS in config.h. To configure the secondary
+flash (0xFF000000 - 0xFF6FFFFF) as another TrueFFS, INCLUDE_CDS85XX_SECOND_TFFS_FLASH 
+also needs to be defined in config.h.
+
+There are two flash banks on the cds8548 board. Each has 8 Mbytes with last 1 MByte 
+for the bootloader. One contains UBOOT, the other is vxWorks's bootrom. This 
+layout allows each flash has 7 MByte ready for TrueFFS. 
+
+To initialize and format the primary flash device (FFF00000 - FFEFFFFF) for TrueFFS,
+run the following commands in the shell:
+\cs
+    ->sysTffsFormat (0);
+\ce
+
+To initialize and format the secondary flash (FF00000 - FF6FFFFF)for TrueFFS, 
+run the following commands in the shell:
+
+\cs
+   ->sysTffsFormat (1);
+\ce
+
+
+The above commands take a few minutes to complete. (Do not interrupt the 
+board during this time. It may result in damage to the flash.) Properly 
+formatted TrueFFS volumes can be mounted using the following commands 
+(required each time VxWorks boots): 
+
+\cs
+    /@ for primary flash @/
+    usrTffsConfig (0, 0, "/tffs0/");
+    /@ for secondary flash @/
+    usrTffsConfig (1, 0, "/tffs1/");
+\ce
+
+TrueFFS can also serve as a boot device.  Assuming the target 
+is configured to access files on the host file system, the 
+following command will copy VxWorks from the host to the TrueFFS 
+volume on the target.  (Substitute /tff1/ for the secondary flash):
+
+\cs
+    copy ("vxWorks.st", "/tffs0/vxWorks.st");
+\ce
+
+To boot with a VxWorks image in the TrueFFS volume, define INCLUDE_TFFS in 
+config.h and build a boot ROM. Program the new boot ROM image into the boot 
+flash and specify the following in the boot dialog:
+
+\cs
+    /@ for primary flash @/
+    boot device: tffs=0,0
+    file name  : /tffs0/vxWorks.st
+    /@ for secondary flash @/
+    boot device: tffs=1,0
+    file name  : /tffs1/vxWorks.st
+\ce
+
+However, this release does not support using TrueFFS utility routines to 
+program the boot ROM.
+
+\sh Serial Configuration
+The UART device is configured with 8 data bits, 1 stop bit, hardware
+handshaking, and parity disabled.  The device operates at 9600 bps. The
+on-chip DUART on the MPC8548 is supported. However, only one channel of the 
+DUART is used on the CDS8548 reference boards.
+
+\sh Programmable Interrupt Controller
+
+The PIC driver provided by this BSP supports all internal and external 
+interrupt sources. The driver can also be configured to route such interrupt 
+sources to the critical interrupt pin. However, because critical interrupts 
+are routed directly to the interrupt source instead of being manager by the 
+PIC with IACK or EOI, the Critical Interrupt Summary registers are used to 
+check for the source. The transient values in these registers cause a spurious
+vector when indexing into the vector table.
+
+\sh SPECIAL CONSIDERATIONS
+This section describes miscellaneous information that you need to know before 
+using this BSP. Make sure you have one of the supported cds systems described
+at the start and are using the specified switch settings for these versions.
+
+\sh Known Issues
+See README file within the cds8548 BSP.
+
+\sh Delivered Objects
+\is
+\i bootrom
+\i bootrom_uncmp.hex
+\i bootrom_uncmp.bin
+\i vxWorks
+\i vxWorks.sym
+\i vxWorks.st
+\ie
+
+
+BIBLIOGRAPHY
+For further information on the CDS8548 board, refer to the following 
+documents:
+
+\tb MPC8548E Reference Manual 
+
+\tb PowerPC E500 Core reference Manual 
+
+\tb Motorola PowerPC Microprocessor Family: The Programming Environments 
+
+\tb CDS8548 Arcadia X3 Motherboard User's Manual
+\tb CDS8548 Arcadia X3.1 Motherboard User's Manual
+
+\tb CDS8548 Carrier User's Manual 
+
+\tb CDS8548 CPUCard User's Manual 
+
+\tb CDS8548 Quick Start-Up Guide  
+
+Much of the Freescale documentation listed above can be found online. 
+The following URL is correct at the time of writing:
+
+http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MPC8548E
+
+If the MPC8548E-specific link listed above does not work, you can also 
+navigate to the documentation from the main link at: 
+
+http://www.freescale.com/
